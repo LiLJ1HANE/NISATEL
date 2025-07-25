@@ -9,8 +9,9 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import './index.css';
 import ServicesPage from './Pages/ServicesPage';
-import ProductsPage from './Pages/ProductsPage';
+import PylonesPage from './Pages/PylonesPage';
 import ApplicationsPage from './Pages/ApplicationsPage';
+import WirelessPage from './Pages/WirelessPage';
 
 function App() {
   useEffect(() => {
@@ -28,9 +29,9 @@ function App() {
             <Route path="/Acceuil" element={<LandingPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/services" element={<ServicesPage />} />
-            <Route path="/produits" element={<ProductsPage />} />
+            <Route path="/pylônes" element={<PylonesPage />} />
             <Route path="/applications" element={<ApplicationsPage />} />
-            
+            <Route path="/wireless" element={<WirelessPage />} />
           </Routes>
         </main>
 

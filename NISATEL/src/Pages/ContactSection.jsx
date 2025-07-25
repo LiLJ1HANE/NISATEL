@@ -10,8 +10,8 @@ export default function ContactSection() {
 
   return (
     <section className="py-24 bg-white" id="contact">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-12">
+      <div className="container px-4 mx-auto">
+        <div className="flex flex-col gap-12 md:flex-row">
           {/* Infos */}
           <motion.div
             className="flex-1 min-w-[300px]"
@@ -20,13 +20,13 @@ export default function ContactSection() {
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl font-bold text-blue-900 mb-4">Contactez Nos Experts</h2>
-            <p className="text-gray-600 mb-8">
+            <h2 className="mb-4 text-3xl font-bold text-blue-900">Contactez Nos Experts</h2>
+            <p className="mb-8 text-gray-600">
               Nos équipes techniques sont à votre disposition pour étudier votre projet et vous proposer la solution la plus adaptée.
             </p>
-            <div className="space-y-6 mt-10">
+            <div className="mt-10 space-y-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 text-xl">
+                <div className="flex items-center justify-center w-12 h-12 text-xl text-blue-600 rounded-full bg-blue-50">
                   <FiPhone />
                 </div>
                 <div>
@@ -35,7 +35,7 @@ export default function ContactSection() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 text-xl">
+                <div className="flex items-center justify-center w-12 h-12 text-xl text-blue-600 rounded-full bg-blue-50">
                   <FiMail />
                 </div>
                 <div>
@@ -44,7 +44,7 @@ export default function ContactSection() {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-blue-50 text-blue-600 text-xl">
+                <div className="flex items-center justify-center w-12 h-12 text-xl text-blue-600 rounded-full bg-blue-50">
                   <FiMapPin />
                 </div>
                 <div>

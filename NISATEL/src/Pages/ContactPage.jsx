@@ -10,7 +10,7 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen pt-[150px] p-6 bg-white text-gray-800">
+    <div className="min-h-screen pt-[150px] p-6 text-gray-800" style={{ background: 'linear-gradient(to bottom, #ff9800 0%, #fff 60%)' }}>
       {/* Titre principal */}
       <motion.h1
         className="mb-3 text-4xl font-bold text-center text-blue-900"

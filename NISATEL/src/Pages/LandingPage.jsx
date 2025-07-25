@@ -18,42 +18,47 @@ const LandingPageContainer = styled(motion.div)`
   color: #333;
   line-height: 1.6;
   overflow-x: hidden;
+  background: white;
 `;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+  @media (max-width: 768px) {
+    padding: 0 10px;
+  }
 `;
 
 const SectionHeader = styled.div`
   text-align: center;
   margin-bottom: 50px;
-
   h2 {
     font-size: 2.5rem;
-    color: #2c3e50;
+    color: #154c79;
     margin-bottom: 15px;
     position: relative;
     display: inline-block;
-
     &:after {
       content: '';
       position: absolute;
       width: 50px;
       height: 3px;
-      background-color: #3498db;
+      background-color: #154c79;
       bottom: -10px;
       left: 50%;
       transform: translateX(-50%);
     }
   }
-
   p {
     font-size: 1.1rem;
     color: #7f8c8d;
     max-width: 700px;
     margin: 0 auto;
+  }
+  @media (max-width: 768px) {
+    h2 { font-size: 2rem; }
+    p { font-size: 1rem; }
   }
 `;
 
@@ -62,6 +67,12 @@ const HeroSlider = styled.div`
   position: relative;
   height: 80vh;
   overflow: hidden;
+  @media (max-width: 768px) {
+    height: 50vh;
+  }
+  @media (max-width: 480px) {
+    height: 35vh;
+  }
 `;
 
 const Slide = styled.div`
@@ -70,6 +81,12 @@ const Slide = styled.div`
   background-position: center;
   position: relative;
   background-image: ${props => props.bgImage ? `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${props.bgImage})` : 'none'};
+  @media (max-width: 768px) {
+    height: 50vh;
+  }
+  @media (max-width: 480px) {
+    height: 35vh;
+  }
 `;
 
 const SlideContent = styled.div`
@@ -81,22 +98,28 @@ const SlideContent = styled.div`
   color: white;
   width: 80%;
   max-width: 800px;
-
   h1 {
     font-size: 3rem;
     margin-bottom: 20px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
   }
-
   p {
     font-size: 1.3rem;
     margin-bottom: 30px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   }
+  @media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    p { font-size: 1rem; }
+  }
+  @media (max-width: 480px) {
+    h1 { font-size: 1.2rem; }
+    p { font-size: 0.9rem; }
+  }
 `;
 
 const CTAButton = styled(motion.button)`
-  background-color: #3498db;
+  background-color: #154c79;
   color: white;
   border: none;
   padding: 12px 30px;
@@ -107,6 +130,10 @@ const CTAButton = styled(motion.button)`
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 1px;
+  @media (max-width: 480px) {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
 `;
 
 // About Section Styles
@@ -140,7 +167,7 @@ const AboutContent = styled(motion.div)`
 `;
 
 const LearnMoreButton = styled(motion.button)`
-  background-color: #3498db;
+  background-color: #154c79;
   color: white;
   border: none;
   padding: 10px 25px;
@@ -235,7 +262,7 @@ const ServiceIcon = styled.div`
 `;
 
 const ServiceButton = styled(motion.button)`
-  background-color: #3498db;
+  background-color: #154c79;
   color: white;
   border: none;
   padding: 8px 20px;
@@ -270,13 +297,13 @@ const TabButton = styled.button`
   border: none;
   font-size: 1.1rem;
   font-weight: 600;
-  color: ${props => props.active ? '#3498db' : '#7f8c8d'};
+  color: ${props => props.active ? '#154c79' : '#7f8c8d'};
   cursor: pointer;
   transition: all 0.3s ease;
-  border-bottom: ${props => props.active ? '3px solid #3498db' : 'none'};
+  border-bottom: ${props => props.active ? '3px solid #154c79' : 'none'};
 
   &:hover {
-    color: #3498db;
+    color: #154c79;
   }
 `;
 
@@ -333,7 +360,7 @@ const ProductDetails = styled.div`
 `;
 
 const ProductButton = styled(motion.button)`
-  background-color: #3498db;
+  background-color: #154c79;
   color: white;
   border: none;
   padding: 10px 25px;
@@ -506,7 +533,7 @@ const FormGroup = styled.div`
 `;
 
 const SubmitButton = styled(motion.button)`
-  background-color: #3498db;
+  background-color: #154c79;
   color: white;
   border: none;
   padding: 12px 30px;

@@ -1,10 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/LogoNisatel.jpg";
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showMobileProducts, setShowMobileProducts] = useState(false);
+  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false);
+  const closeDropdownTimeout = useRef();
+  const mobileMenuRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +18,23 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Fermer le menu mobile quand on clique à l'extérieur
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen]);
 
   return (
     <header
@@ -38,23 +59,62 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden space-x-6 md:flex">
-          {[
-            "Accueil",
-            "Services",
-            "Produits",
-            "Applications",
-            "Contact",
-          ].map((item) => (
-            <Link
-              key={item}
-              to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-              className="relative text-sm font-medium text-gray-700 transition hover:text-orange-600"
-            >
-              <span className="after:block after:h-[2px] after:w-0 after:bg-gradient-to-r after:from-orange-400 after:to-orange-600 after:transition-all after:duration-300 hover:after:w-full">
-                {item}
-              </span>
-            </Link>
-          ))}
+          {["Accueil", "Services", "Produits", "Applications", "Contact"].map((item) =>
+            item === "Produits" ? (
+              <div
+                key={item}
+                className="relative"
+                onMouseEnter={() => {
+                  if (closeDropdownTimeout.current) clearTimeout(closeDropdownTimeout.current);
+                  setIsProductsDropdownOpen(true);
+                }}
+                onMouseLeave={() => {
+                  closeDropdownTimeout.current = setTimeout(() => {
+                    setIsProductsDropdownOpen(false);
+                  }, 200);
+                }}
+              >
+                <button
+                  className="relative flex items-center gap-1 text-sm font-medium text-gray-700 transition hover:text-orange-600 focus:outline-none"
+                  aria-haspopup="true"
+                  aria-expanded={isProductsDropdownOpen}
+                >
+                  <span className="after:block after:h-[2px] after:w-0 after:bg-gradient-to-r after:from-orange-400 after:to-orange-600 after:transition-all after:duration-300 group-hover:after:w-full">
+                    {item}
+                  </span>
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                {/* Dropdown */}
+                {isProductsDropdownOpen && (
+                  <div className="absolute left-0 z-20 w-48 py-2 mt-2 bg-white rounded-md shadow-lg"
+                    onMouseEnter={() => {
+                      if (closeDropdownTimeout.current) clearTimeout(closeDropdownTimeout.current);
+                      setIsProductsDropdownOpen(true);
+                    }}
+                    onMouseLeave={() => {
+                      closeDropdownTimeout.current = setTimeout(() => {
+                        setIsProductsDropdownOpen(false);
+                      }, 200);
+                    }}
+                  >
+                    <Link to="/pylônes" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600">Pylônes</Link>
+                    <Link to="/wireless" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600">Solutions Wireless</Link>
+                    <a href="#" className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600">Energie</a>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                key={item}
+                to={item === "Accueil" ? "/" : item === "Solutions Wireless" ? "/wireless" : `/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                className="relative text-sm font-medium text-gray-700 transition hover:text-orange-600"
+              >
+                <span className="after:block after:h-[2px] after:w-0 after:bg-gradient-to-r after:from-orange-400 after:to-orange-600 after:transition-all after:duration-300 hover:after:w-full">
+                  {item}
+                </span>
+              </Link>
+            )
+          )}
         </nav>
 
         {/* Mobile Hamburger */}
@@ -84,24 +144,75 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="px-6 pb-4 bg-white shadow-inner md:hidden">
-          {[
-            "Accueil",
-            "Notre entreprise",
-            "Services",
-            "Produits",
-            "Applications",
-            "Contact",
-          ].map((item) => (
-            <Link
-              key={item}
-              to={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
-              className="block py-2 text-sm text-gray-700 border-b border-gray-200 hover:text-orange-600"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              {item}
-            </Link>
-          ))}
+        <div 
+          className="absolute left-0 right-0 px-6 pb-4 bg-white shadow-inner top-16 md:hidden"
+          ref={mobileMenuRef}
+        >
+          {["Accueil", "Notre entreprise", "Services", "Produits", "Applications", "Contact"].map((item) =>
+            item === "Produits" ? (
+              <div key={item} className="">
+                <button
+                  className="flex items-center w-full py-2 text-sm text-left text-gray-700 border-b border-gray-200 hover:text-orange-600 focus:outline-none"
+                  onClick={() => setShowMobileProducts((prev) => !prev)}
+                  type="button"
+                >
+                  {item}
+                  <svg 
+                    className={`w-4 h-4 ml-1 transition-transform ${showMobileProducts ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {showMobileProducts && (
+                  <div className="pl-4">
+                    <Link 
+                      to="/products" 
+                      className="block py-2 text-sm text-gray-700 border-b border-gray-200 hover:text-orange-600"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setShowMobileProducts(false);
+                      }}
+                    >
+                      Pylône
+                    </Link>
+                    <Link 
+                      to="/wireless" 
+                      className="block py-2 text-sm text-gray-700 border-b border-gray-200 hover:text-orange-600"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setShowMobileProducts(false);
+                      }}
+                    >
+                      Solutions Wireless
+                    </Link>
+                    <a 
+                      href="#" 
+                      className="block py-2 text-sm text-gray-700 border-b border-gray-200 hover:text-orange-600"
+                      onClick={() => {
+                        setIsMobileMenuOpen(false);
+                        setShowMobileProducts(false);
+                      }}
+                    >
+                      Energie
+                    </a>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                key={item}
+                to={item === "Accueil" ? "/" : item === "Solutions Wireless" ? "/wireless" : `/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                className="block py-2 text-sm text-gray-700 border-b border-gray-200 hover:text-orange-600"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item}
+              </Link>
+            )
+          )}
         </div>
       )}
     </header>
