@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FiPhone, FiMail, FiMapPin } from "react-icons/fi";
 import { FaFax } from "react-icons/fa";
+import { Link } from 'react-router-dom';
 
 export default function ContactPage() {
   const handleSubmit = (e) => {
@@ -80,7 +81,7 @@ export default function ContactPage() {
         </motion.div>
       </motion.div>
 
-      {/* Formulaire de contact */}
+      {/* Nouveau formulaire de contact (version landing page) */}
       <motion.div
         className="max-w-4xl p-8 mx-auto bg-white border border-gray-100 shadow-lg rounded-2xl"
         initial={{ opacity: 0, y: 50 }}
@@ -88,55 +89,91 @@ export default function ContactPage() {
         transition={{ delay: 0.5 }}
       >
         <h2 className="mb-6 text-2xl font-bold text-blue-900">Envoyez-nous un message</h2>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <input
-            type="text"
-            placeholder="Nom complet"
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <input
-            type="text"
-            placeholder="Société"
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-          <input
-            type="tel"
-            placeholder="Téléphone"
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <select
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 md:col-span-2"
-            required
-          >
-            <option value="">Service concerné</option>
-            <option value="etudes">Bureau d'études</option>
-            <option value="fabrication">Fabrication</option>
-            <option value="installation">Installation</option>
-            <option value="maintenance">Maintenance</option>
-            <option value="autre">Autre demande</option>
-          </select>
-          <textarea
-            placeholder="Décrivez votre projet"
-            rows="5"
-            className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 md:col-span-2"
-            required
-          ></textarea>
-          <button
+        
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label htmlFor="name" className="block mb-2 font-semibold text-gray-700">Nom complet</label>
+              <input
+                type="text"
+                id="name"
+                placeholder="Votre nom"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="company" className="block mb-2 font-semibold text-gray-700">Société</label>
+              <input
+                type="text"
+                id="company"
+                placeholder="Votre société"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div>
+              <label htmlFor="email" className="block mb-2 font-semibold text-gray-700">Email</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Votre email"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="phone" className="block mb-2 font-semibold text-gray-700">Téléphone</label>
+              <input
+                type="tel"
+                id="phone"
+                placeholder="Votre téléphone"
+                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+          
+          <div>
+            <label htmlFor="service" className="block mb-2 font-semibold text-gray-700">Service concerné</label>
+            <select
+              id="service"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="">Sélectionnez un service</option>
+              <option value="etudes">Bureau d'études</option>
+              <option value="fabrication">Fabrication</option>
+              <option value="installation">Installation</option>
+              <option value="maintenance">Maintenance</option>
+              <option value="autre">Autre demande</option>
+            </select>
+          </div>
+          
+          <div>
+            <label htmlFor="message" className="block mb-2 font-semibold text-gray-700">Message</label>
+            <textarea
+              id="message"
+              rows="4"
+              placeholder="Décrivez votre projet"
+              className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            ></textarea>
+          </div>
+          
+          <motion.button
             type="submit"
-            className="w-full px-6 py-3 font-semibold text-white transition-all duration-300 bg-blue-600 rounded-md hover:bg-blue-700 md:col-span-2"
+            className="w-full px-6 py-3 font-semibold text-white bg-blue-600 rounded-md"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             Envoyer la demande
-          </button>
+          </motion.button>
         </form>
       </motion.div>
     </div>
   );
 }
-import { Link } from 'react-router-dom';
