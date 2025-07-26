@@ -12,7 +12,7 @@ import ServicesPage from './Pages/ServicesPage';
 import PylonesPage from './Pages/PylonesPage';
 import ApplicationsPage from './Pages/ApplicationsPage';
 import WirelessPage from './Pages/WirelessPage';
-
+import Chatbot from './components/Chatbot';
 function App() {
   useEffect(() => {
     AOS.init({ duration: 1000, once: true });
@@ -22,7 +22,7 @@ function App() {
     <Router>
       <div className="flex flex-col min-h-screen App">
         <Header />
-
+        <Chatbot />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<LandingPage />} />
