@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FiPhone, FiMail, FiMapPin, FiSend } from "react-icons/fi";
 import { FaFax } from "react-icons/fa";
 import headerImage from "../assets/Business-phones-entreprise.jpg";
+import Select from 'react-select';
 
 export default function ContactPage() {
   const handleSubmit = (e) => {
@@ -10,7 +11,14 @@ export default function ContactPage() {
     // Ici vous pourriez ajouter la logique de soumission réelle
     alert("Votre message a été envoyé. Nous vous contacterons bientôt.");
   };
-
+  const options = [
+  { value: 'etudes', label: "Bureau d'études" },
+  { value: 'fabrication', label: 'Fabrication' },
+  { value: 'installation', label: 'Installation' },
+  { value: 'maintenance', label: 'Maintenance' },
+  { value: 'autre', label: 'Autre demande' },
+  ];
+  
   const contactItems = [
     {
       icon: <FiPhone className="text-xl" />,
@@ -23,7 +31,7 @@ export default function ContactPage() {
       icon: <FaFax className="text-xl" />,
       title: "Fax",
       info: "+212 5 37 41 02 26",
-      className: "bg-violet-100 text-violet-600",
+      className: "bg-blue-100 text-blue-600",
     },
     {
       icon: <FiMail className="text-xl" />,
@@ -36,7 +44,7 @@ export default function ContactPage() {
       icon: <FiMapPin className="text-xl" />,
       title: "Adresse",
       info: "06, Résidence Kader, Mers El Kheir, Témara – Maroc",
-      className: "bg-violet-100 text-violet-600",
+      className: "bg-blue-100 text-blue-600",
     },
   ];
 
@@ -44,7 +52,7 @@ export default function ContactPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-900/80 to-orange-600/60 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-orange-600/60 z-10" />
         <img 
           src={headerImage} 
           alt="NISATEL Contact" 
@@ -125,7 +133,7 @@ export default function ContactPage() {
           >
             <div className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">Envoyez-nous un message</h2>
-              <div className="w-20 h-1 bg-violet-500 rounded-full"></div>
+              <div className="w-20 h-1 bg-blue-500 rounded-full"></div>
               <p className="mt-4 text-gray-600">
                 Remplissez ce formulaire et nous vous répondrons dans les plus brefs délais.
               </p>
@@ -141,7 +149,7 @@ export default function ContactPage() {
                     type="text"
                     id="fullname"
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                    className="w-full px-4 py-2 border border-stone-300 hover:border-stone-400 rounded-md focus:border-2 focus:border-blue-500 focus:outline-none focus:ring-0 "
                   />
                 </div>
                 <div>
@@ -151,7 +159,7 @@ export default function ContactPage() {
                   <input
                     type="text"
                     id="company"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition"
+                    className="w-full px-4 py-2 border border-stone-300 hover:border-stone-400 rounded-md focus:border-2 focus:border-blue-500 focus:outline-none focus:ring-0"
                   />
                 </div>
               </div>
@@ -165,7 +173,7 @@ export default function ContactPage() {
                     type="email"
                     id="email"
                     required
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+                    className="w-full px-4 py-2 border border border-stone-300 hover:border-stone-400 rounded-md focus:border-2 focus:border-blue-500 focus:outline-none focus:ring-0"
                   />
                 </div>
                 <div>
@@ -175,7 +183,7 @@ export default function ContactPage() {
                   <input
                     type="tel"
                     id="phone"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition"
+                    className="w-full px-4 py-2 border border-stone-300 hover:border-stone-400 rounded-md focus:border-2 focus:border-blue-500 focus:outline-none focus:ring-0"
                   />
                 </div>
               </div>
@@ -184,20 +192,16 @@ export default function ContactPage() {
                 <label htmlFor="service" className="block text-sm font-medium text-gray-700 mb-1">
                   Service concerné <span className="text-orange-500">*</span>
                 </label>
-                <select
-                  id="service"
-                  required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
-                >
-                  <option value="">Sélectionnez un service</option>
-                  <option value="etudes">Bureau d'études</option>
-                  <option value="fabrication">Fabrication</option>
-                  <option value="installation">Installation</option>
-                  <option value="maintenance">Maintenance</option>
-                  <option value="autre">Autre demande</option>
-                </select>
-              </div>
 
+                <Select
+                  options={options}
+                  placeholder="Sélectionnez un service"
+                  className="w-full"
+                  classNamePrefix="custom"
+            
+                />
+
+              </div>
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
                   Votre message <span className="text-orange-500">*</span>
@@ -206,13 +210,13 @@ export default function ContactPage() {
                   id="message"
                   rows="5"
                   required
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition"
+                  className="w-full px-4 py-2 border border-stone-300 hover:border-stone-400 rounded-md focus:border-2 focus:border-blue-500 focus:outline-none focus:ring-0"
                 ></textarea>
               </div>
 
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-gradient-to-r from-orange-500 to-violet-600 text-white font-medium rounded-md hover:opacity-90 transition-opacity flex items-center justify-center space-x-2"
+                className="w-full px-6 py-3 bg-blue-700 text-white font-medium rounded-md hover:opacity-90 transition-opacity flex items-center justify-center space-x-2"
               >
                 <span>Envoyer le message</span>
                 <FiSend className="text-lg" />
