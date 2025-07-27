@@ -31,7 +31,7 @@ export default function ContactPage() {
       icon: <FaFax className="text-xl" />,
       title: "Fax",
       info: "+212 5 37 41 02 26",
-      className: "bg-blue-100 text-blue-600",
+      className: "bg-blue-100 text-blue-900",
     },
     {
       icon: <FiMail className="text-xl" />,
@@ -44,7 +44,7 @@ export default function ContactPage() {
       icon: <FiMapPin className="text-xl" />,
       title: "Adresse",
       info: "06, Résidence Kader, Mers El Kheir, Témara – Maroc",
-      className: "bg-blue-100 text-blue-600",
+      className: "bg-blue-100 text-blue-900",
     },
   ];
 
@@ -66,10 +66,10 @@ export default function ContactPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              Contactez notre équipe
+              <span className="text-orange-400">Contactez</span> notre équipe
             </motion.h1>
             <motion.p
-              className="text-lg text-orange-100 md:text-xl"
+              className="text-xl font-medium text-white md:text-xl"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.6 }}
@@ -133,7 +133,7 @@ export default function ContactPage() {
           >
             <div className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-2">Envoyez-nous un message</h2>
-              <div className="w-20 h-1 bg-blue-500 rounded-full"></div>
+              <div className="w-20 h-1 bg-blue-900 rounded-full"></div>
               <p className="mt-4 text-gray-600">
                 Remplissez ce formulaire et nous vous répondrons dans les plus brefs délais.
               </p>
@@ -216,7 +216,7 @@ export default function ContactPage() {
 
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-blue-700 text-white font-medium rounded-md hover:opacity-90 transition-opacity flex items-center justify-center space-x-2"
+                className="w-full px-6 py-3 bg-blue-900 text-white font-medium rounded-md hover:opacity-90 transition-opacity flex items-center justify-center space-x-2"
               >
                 <span>Envoyer le message</span>
                 <FiSend className="text-lg" />

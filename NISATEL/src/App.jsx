@@ -21,7 +21,7 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen App overflow-hidden">
-        <Header />
+        <Header/>
         <Chatbot />
         <main className="flex-grow">
           <Routes>
