@@ -355,14 +355,14 @@ const Chatbot = () => {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-10 right-10 z-50">
       {!state.isOpen ? (
         <button
           onClick={() => setState(prev => ({ ...prev, isOpen: true }))}
           className="relative bg-gradient-to-r from-orange-500 to-orange-600 text-white p-5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
           aria-label="Ouvrir le chatbot"
         >
-          <FaRobot size={28} />
+          <FaRobot size={20} />
           <span className="absolute -top-1 -right-1 h-4 w-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></span>
         </button>
       ) : (
