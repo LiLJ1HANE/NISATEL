@@ -17,28 +17,31 @@ const chatbotConfig = {
     buttons: [
       { text: "Demande de devis", value: "service_quote", icon: <FaQuoteRight /> },
       { text: "Retour", value: "menu" }
-    ]
+    ],
+    keywords: ["services", "service", "offre", "prestations", "que proposez-vous", "quels services"]
   },
   products: {
     categories: {
       pylones: {
-        title: "Pylônes & Structures",
+        title: "Pylônes et Structures",
         items: [
           "Pylônes treillis autoportants",
           "Pylônes monotubes",
           "Pylônes spéciaux (haubanés, rabattables)",
           "Renforcement de pylône existant",
-        ]
+        ],
+        keywords: ["pylône", "pylônes", "structure", "structures"]
       },
       signalisation: {
-        title: "Mobilier Urbain et Signalisation",
+        title: "Mobilier Urbain",
         items: [
           "Potelets",
           "Poteaux flexibles",
           "Chaînes de délimitation",
           "Les barrières extensibles",
           "Les cônes de signalisation"
-        ]
+        ],
+        keywords: ["signalisation", "mobilier urbain", "potelet", "barrière"]
       },
       equipements: {
         title: "Matériel Fibre Optique",
@@ -48,19 +51,22 @@ const chatbotConfig = {
           "Jarretières et répartiteurs optiques",
           "Baies de raccordement",
           "Matériel pour tests FO"
-        ]
+        ],
+        keywords: ["fibre optique", "matériel fo", "équipement fo", "câble optique"]
       },
     },
     defaultButtons: [
       { text: "Retour aux catégories", value: "products" },
       { text: "Menu principal", value: "menu" },
       { text: "Demande de devis", value: "service_quote", icon: <FaQuoteRight /> },
-    ]
+    ],
+    keywords: ["produits", "produit", "gamme", "catalogue", "que vendez-vous", "quels produits"]
   },
   contact: {
     phone: "0537410257",
     email: "contact@nisatel.ma",
-    address: "06, Résidence Kader, Témara"
+    address: "06, Résidence Kader, Témara",
+    keywords: ["contact", "contacter", "email", "mail", "téléphone", "numéro", "adresse", "où êtes-vous", "localisation"]
   }
 };
 
@@ -96,8 +102,14 @@ const Chatbot = () => {
     }, 800);
   }, []);
 
+  const containsKeywords = (input, keywords) => {
+    return keywords.some(keyword => 
+      input.toLowerCase().includes(keyword.toLowerCase())
+    );
+  };
+
   const handleResponse = useCallback((userInput) => {
-    const input = userInput.toLowerCase();
+    const input = userInput.toLowerCase().trim();
 
     if (input === "menu") {
       simulateTyping(() => {
@@ -110,8 +122,10 @@ const Chatbot = () => {
         });
         setState(prev => ({ ...prev, currentView: 'menu' }));
       });
+      return;
     }
-    else if (input === "services") {
+
+    if (input === "services" || containsKeywords(input, chatbotConfig.services.keywords)) {
       simulateTyping(() => {
         addMessage(chatbotConfig.services.description, 'bot', {
           listItems: chatbotConfig.services.items,
@@ -119,8 +133,10 @@ const Chatbot = () => {
         });
         setState(prev => ({ ...prev, currentView: 'services' }));
       });
+      return;
     }
-    else if (input === "products") {
+
+    if (input === "products" || containsKeywords(input, chatbotConfig.products.keywords)) {
       simulateTyping(() => {
         const categories = Object.values(chatbotConfig.products.categories).map(cat => ({
           text: cat.title,
@@ -135,8 +151,23 @@ const Chatbot = () => {
         });
         setState(prev => ({ ...prev, currentView: 'products' }));
       });
+      return;
     }
-    else if (input.startsWith("product_category_")) {
+
+    for (const [key, category] of Object.entries(chatbotConfig.products.categories)) {
+      if (containsKeywords(input, category.keywords)) {
+        simulateTyping(() => {
+          addMessage(category.title, 'bot', {
+            listItems: category.items,
+            buttons: chatbotConfig.products.defaultButtons
+          });
+          setState(prev => ({ ...prev, currentView: 'product_category' }));
+        });
+        return;
+      }
+    }
+
+    if (input.startsWith("product_category_")) {
       simulateTyping(() => {
         const categoryKey = input.replace("product_category_", "");
         const category = Object.entries(chatbotConfig.products.categories)
@@ -157,8 +188,10 @@ const Chatbot = () => {
           });
         }
       });
+      return;
     }
-    else if (input === "contact") {
+
+    if (input === "contact" || containsKeywords(input, chatbotConfig.contact.keywords)) {
       simulateTyping(() => {
         addMessage("Coordonnées de NISATEL:", 'bot', {
           contactInfo: true,
@@ -166,21 +199,65 @@ const Chatbot = () => {
             { text: "Retour", value: "menu" }
           ]
         });
+        setState(prev => ({ ...prev, currentView: 'contact' }));
       });
+      return;
     }
-    else {
+
+    if (
+      input.includes("numéro") ||input.includes("téléphone") ||input.includes("tel") ||/appel\w*/i.test(input) || input.includes("joindre") || input.includes("contacter")) {
       simulateTyping(() => {
-        addMessage("Pouvez-vous préciser votre demande ?", 'bot', {
+        addMessage(`Vous pouvez nous joindre au ${chatbotConfig.contact.phone}`, 'bot', {
           buttons: [
-            { text: "Voir le menu", value: "menu" },
+            { text: "Appeler le téléphone", value: `call_${chatbotConfig.contact.phone}` },
+            { text: "Autre question", value: "menu" }
           ]
         });
       });
+      return;
     }
+
+    if (input.includes("email") || input.includes("mail") || input.includes("courriel")) {
+      simulateTyping(() => {
+        addMessage(`Notre adresse email est ${chatbotConfig.contact.email}`, 'bot', {
+          buttons: [
+            { text: "Envoyer un email", value: `email_${chatbotConfig.contact.email}` },
+            { text: "Autre question", value: "menu" }
+          ]
+        });
+      });
+      return;
+    }
+
+    if (input.includes("adresse") || input.includes("localisation") || input.includes("où")|| input.includes("trouver")) {
+      simulateTyping(() => {
+        addMessage(`Nous sommes situés à ${chatbotConfig.contact.address}`, 'bot', {
+          buttons: [
+            { text: "Voir sur la carte", value: "open_map" },
+            { text: "Autre question", value: "menu" }
+          ]
+        });
+      });
+      return;
+    }
+
+    simulateTyping(() => {
+      addMessage("Pouvez-vous préciser votre demande ? Je peux vous parler de nos services, produits ou vous donner nos coordonnées.", 'bot', {
+        buttons: [
+          { text: "Nos services", value: "services" },
+          { text: "Nos produits", value: "products" },
+          { text: "Contact", value: "contact" },
+          { text: "Menu principal", value: "menu" }
+        ]
+      });
+    });
   }, [simulateTyping]);
 
-  const handleUserAction = useCallback((value) => {
+  const handleUserAction = useCallback((value, buttonText) => {
     if (!value.trim()) return;
+    
+    addMessage(buttonText || value, 'user');
+    setState(prev => ({ ...prev, inputValue: '' }));
     
     if (value === "service_quote") {
       setState(prev => ({ ...prev, isOpen: false }));
@@ -188,10 +265,38 @@ const Chatbot = () => {
       return;
     }
     
-    addMessage(value, 'user');
-    setState(prev => ({ ...prev, inputValue: '' }));
+    if (value.startsWith("call_")) {
+      const phoneNumber = value.replace("call_", "");
+      window.location.href = `tel:${phoneNumber}`;
+      return;
+    }
+    
+    if (value.startsWith("email_")) {
+      const email = value.replace("email_", "");
+      window.location.href = `mailto:${email}`;
+      return;
+    }
+    
+    if (value === "open_map") {
+      simulateTyping(() => {
+        addMessage(`Voici notre localisation: ${chatbotConfig.contact.address} - Vous pouvez la trouver sur Google Maps`, 'bot', {
+          buttons: [
+            { text: "Ouvrir Google Maps", value: `maps_${encodeURIComponent(chatbotConfig.contact.address)}` },
+            { text: "Autre question", value: "menu" }
+          ]
+        });
+      });
+      return;
+    }
+    
+    if (value.startsWith("maps_")) {
+      const address = value.replace("maps_", "");
+      window.open(`https://www.google.com/maps/search/?api=1&query=${address}`, '_blank');
+      return;
+    }
+    
     setTimeout(() => handleResponse(value), 300);
-  }, [handleResponse, navigate]);
+  }, [handleResponse, navigate, simulateTyping]);
 
   useEffect(() => {
     if (state.isOpen && state.messages.length === 0) {
@@ -229,10 +334,10 @@ const Chatbot = () => {
             </a>
           </div>
           <div className="flex items-center p-2 bg-gray-50 rounded-lg">
-            <div className="bg-purple-100 p-2 rounded-full mr-3">
-              <FaEnvelope className="text-purple-600" />
+            <div className="bg-blue-100 p-2 rounded-full mr-3">
+              <FaEnvelope className="text-blue-600" />
             </div>
-            <a href={`mailto:${chatbotConfig.contact.email}`} className="text-purple-600 hover:underline">
+            <a href={`mailto:${chatbotConfig.contact.email}`} className="text-blue-600 hover:underline">
               {chatbotConfig.contact.email}
             </a>
           </div>
@@ -254,16 +359,15 @@ const Chatbot = () => {
       {!state.isOpen ? (
         <button
           onClick={() => setState(prev => ({ ...prev, isOpen: true }))}
-          className="relative bg-gradient-to-r from-orange-500 to-purple-600 text-white p-5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+          className="relative bg-gradient-to-r from-orange-500 to-orange-600 text-white p-5 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
           aria-label="Ouvrir le chatbot"
         >
           <FaRobot size={28} />
           <span className="absolute -top-1 -right-1 h-4 w-4 bg-green-400 rounded-full border-2 border-white animate-pulse"></span>
         </button>
       ) : (
-        <div className="w-full max-w-md bg-white rounded-xl shadow-2xl flex flex-col border border-gray-100 overflow-hidden transform transition-all duration-300">
-          {/* En-tête */}
-          <div className="bg-gradient-to-r from-orange-600 to-purple-600 text-white p-4 flex justify-between items-center">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-2xl flex flex-col border border-gray-100 overflow-hidden transform transition-all duration-300 max-h-[80vh]">
+          <div className="bg-gradient-to-r from-orange-600 to-orange-600 text-white p-4 flex justify-between items-center">
             <div className="flex items-center space-x-3">
               <div className="relative">
                 <div className="h-10 w-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -285,13 +389,12 @@ const Chatbot = () => {
             </button>
           </div>
           
-          {/* Messages */}
-          <div className="flex-1 p-4 overflow-y-auto h-96 space-y-3 bg-gradient-to-b from-gray-50 to-white">
+          <div className="flex-1 p-4 overflow-y-auto space-y-3 bg-gradient-to-b from-gray-50 to-white" style={{ maxHeight: 'calc(80vh - 150px)' }}>
             {state.messages.map((msg, i) => (
               <div key={i} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] px-4 py-3 rounded-2xl ${
                   msg.sender === 'user'
-                    ? 'bg-gradient-to-r from-orange-500 to-purple-500 text-white rounded-br-none'
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-500 text-white rounded-br-none'
                     : 'bg-gray-100 rounded-bl-none'
                 } shadow-sm transition-all duration-200 hover:shadow-md`}>
                   {renderMessageContent(msg)}
@@ -300,9 +403,9 @@ const Chatbot = () => {
                       {msg.buttons.map((btn, j) => (
                         <button
                           key={j}
-                          onClick={() => handleUserAction(btn.value)}
+                          onClick={() => handleUserAction(btn.value, btn.text)}
                           className={`text-xs px-3 py-1.5 rounded-full flex items-center transition ${
-                            btn.value.includes('quote')
+                            btn.value.includes('quote') || btn.value.includes('call_') || btn.value.includes('email_') || btn.value.includes('maps_')
                               ? 'bg-gradient-to-r from-orange-400 to-orange-500 text-white hover:shadow-md'
                               : btn.value === 'menu'
                                 ? 'bg-gray-200 hover:bg-gray-300'
@@ -332,25 +435,24 @@ const Chatbot = () => {
             <div ref={messagesEndRef} />
           </div>
           
-          {/* Champ de saisie */}
           <div className="p-3 border-t border-gray-100 bg-white">
             <div className="flex items-center space-x-2">
               <input
                 type="text"
                 value={state.inputValue}
                 onChange={(e) => setState(prev => ({ ...prev, inputValue: e.target.value }))}
-                onKeyPress={(e) => e.key === 'Enter' && handleUserAction(state.inputValue)}
+                onKeyPress={(e) => e.key === 'Enter' && handleUserAction(state.inputValue, state.inputValue)}
                 placeholder="Écrivez votre message..."
-                className="flex-1 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm shadow-sm transition"
+                className="flex-1 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm shadow-sm transition"
                 aria-label="Champ de saisie du message"
                 disabled={state.isTyping}
               />
               <button
-                onClick={() => handleUserAction(state.inputValue)}
+                onClick={() => handleUserAction(state.inputValue, state.inputValue)}
                 disabled={!state.inputValue.trim() || state.isTyping}
                 className={`p-3 rounded-xl ${
                   state.inputValue.trim() && !state.isTyping
-                    ? 'bg-gradient-to-r from-orange-500 to-purple-500 text-white hover:shadow-md'
+                    ? 'bg-gradient-to-r from-orange-500 to-orange-500 text-white hover:shadow-md'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 } transition`}
                 aria-label="Envoyer le message"
