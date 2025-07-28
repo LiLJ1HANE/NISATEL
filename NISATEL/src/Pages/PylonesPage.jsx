@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
+import axios from 'axios';
 
 // Styled Components
 const ProductsPageContainer = styled.div`
@@ -155,76 +156,25 @@ const ProductImage = styled.div`
 
 // Main Component
 const ProductsPage = () => {
-  const [activeCategory, setActiveCategory] = useState('autoportants');
+  const [productCategories, setProductCategories] = useState([]);
+  const [activeCategory, setActiveCategory] = useState(null);
 
-  const productCategories = [
-    {
-      id: 'autoportants',
-      name: 'Pylônes Treillis Autoportants',
-      image: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      features: [
-        'Accès par échelle intérieure/extérieure ou nacelle',
-        'Silhouette constante ou à fruit',
-        'Habillage sur demande',
-        'Mise en peinture personnalisée',
-        'Plateformes de travail et paliers de repos',
-        'Système anti-chute de type rail ou câble',
-        'Système anti intrusion',
-        'Balisage diurne, nocturne, lumineux',
-        'Supports d\'antennes',
-        'Mise à la terre et système paratonnerre'
-      ]
-    },
-    {
-      id: 'monotubes',
-      name: 'Pylônes Monotubes',
-      image: 'https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      features: [
-        'Accès par échelle intérieure/extérieure ou nacelle',
-        'Radôme en fibre optionnel',
-        'Cache publicitaire intégré',
-        'Mise en peinture personnalisée',
-        'Plateformes de travail et paliers de repos',
-        'Système anti-chute de type rail ou câble',
-        'Système anti intrusion',
-        'Balisage diurne, nocturne, lumineux',
-        'Supports d\'antennes',
-        'Mise à la terre et système paratonnerre'
-      ]
-    },
-    {
-      id: 'speciaux',
-      name: 'Pylônes Spéciaux',
-      image: 'https://images.unsplash.com/photo-1581093057305-5e0d6a7cd5c5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      features: [
-        'Pylône provisoire pour chantiers',
-        'Pylône sur châssis mobile',
-        'Pylône haubané pour grandes hauteurs',
-        'Mât rabattable pour zones sensibles',
-        'Solutions sur mesure selon besoins spécifiques'
-      ]
-    },
-    {
-      id: 'renforcement',
-      name: 'Renforcement de Pylônes',
-      image: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-      features: [
-        'Renforcement de massifs par surépaisseur',
-        'Élargissement des fondations existantes',
-        'Micropieux pour consolidation',
-        'Ceinturage structurel',
-        'Remplacement d\'éléments existants',
-        'Juppage extérieur pour renforcement'
-      ]
-    }
-  ];
+  useEffect(() => {
+    axios.get("http://localhost:8080/api/products")
+      .then((res) => {
+        setProductCategories(res.data);
+        if (res.data.length > 0) {
+          setActiveCategory(res.data[0].id);
+        }
+      })
+      .catch((err) => console.error("Erreur de chargement des produits :", err));
+  }, []);
 
   const currentCategory = productCategories.find(cat => cat.id === activeCategory);
 
   return (
     <ProductsPageContainer>
       <Sidebar>
-      
         {productCategories.map((category) => (
           <SidebarItem
             key={category.id}
@@ -242,17 +192,14 @@ const ProductsPage = () => {
         {currentCategory && (
           <ProductSection>
             <ProductTitle>{currentCategory.name}</ProductTitle>
-            
+
             <FeatureList>
               {currentCategory.features.map((feature, index) => (
-                <FeatureItem key={index}>
-                  {feature}
-                </FeatureItem>
+                <FeatureItem key={index}>{feature}</FeatureItem>
               ))}
             </FeatureList>
 
             <ProductImage image={currentCategory.image} />
-
           </ProductSection>
         )}
       </MainContent>
