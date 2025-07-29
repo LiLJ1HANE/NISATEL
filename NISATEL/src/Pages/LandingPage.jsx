@@ -447,7 +447,7 @@ const TestimonialAuthor = styled.div`
 `;
 
 // Contact Section Styles
-const ContactSection = styled.section`
+const ContactSectionStyled = styled.section`
   padding: 100px 0;
   background-color: white;
 `;
@@ -544,9 +544,51 @@ const SubmitButton = styled(motion.button)`
   width: 100%;
 `;
 
-// Main Component
 const LandingPage = () => {
   const [activeTab, setActiveTab] = useState('pylones');
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    company: '',
+    serviceConcerned: '',
+    message: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:8080/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert('Message envoyé avec succès !');
+        setFormData({
+          fullName: '',
+          email: '',
+          phone: '',
+          company: '',
+          serviceConcerned: '',
+          message: '',
+        });
+      } else {
+        alert("Erreur lors de l'envoi du message.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Erreur réseau.");
+    }
+  };
   
   // Animation variants
   const containerVariants = {
@@ -981,7 +1023,7 @@ const LandingPage = () => {
       </TestimonialsSection>
 
       {/* Contact Section */}
-      <ContactSection>
+      <ContactSectionStyled>
         <Container>
           <ContactContainer>
             <ContactInfo
@@ -1027,34 +1069,70 @@ const LandingPage = () => {
             </ContactInfo>
             
             <ContactForm
+              onSubmit={handleSubmit}
               initial={{ x: 50, opacity: 0 }}
               whileInView={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               viewport={{ once: true }}
             >
               <FormGroup>
-                <label htmlFor="name">Nom complet</label>
-                <input type="text" id="name" placeholder="Votre nom" />
+                <label htmlFor="fullName">Nom complet</label>
+                <input 
+                  type="text" 
+                  id="fullName" 
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  placeholder="Votre nom" 
+                  required
+                />
               </FormGroup>
               
               <FormGroup>
                 <label htmlFor="company">Société</label>
-                <input type="text" id="company" placeholder="Votre société" />
+                <input 
+                  type="text" 
+                  id="company" 
+                  name="company"
+                  value={formData.company}
+                  onChange={handleChange}
+                  placeholder="Votre société" 
+                />
               </FormGroup>
               
               <FormGroup>
                 <label htmlFor="email">Email</label>
-                <input type="email" id="email" placeholder="Votre email" />
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Votre email" 
+                  required
+                />
               </FormGroup>
               
               <FormGroup>
                 <label htmlFor="phone">Téléphone</label>
-                <input type="tel" id="phone" placeholder="Votre téléphone" />
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Votre téléphone" 
+                />
               </FormGroup>
               
               <FormGroup>
-                <label htmlFor="service">Service concerné</label>
-                <select id="service">
+                <label htmlFor="serviceConcerned">Service concerné</label>
+                <select 
+                  id="serviceConcerned"
+                  name="serviceConcerned"
+                  value={formData.serviceConcerned}
+                  onChange={handleChange}
+                >
                   <option value="">Sélectionnez un service</option>
                   <option value="etudes">Bureau d'études</option>
                   <option value="fabrication">Fabrication</option>
@@ -1066,7 +1144,15 @@ const LandingPage = () => {
               
               <FormGroup>
                 <label htmlFor="message">Message</label>
-                <textarea id="message" rows="4" placeholder="Décrivez votre projet"></textarea>
+                <textarea 
+                  id="message" 
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  rows="4" 
+                  placeholder="Décrivez votre projet"
+                  required
+                ></textarea>
               </FormGroup>
               
               <SubmitButton
@@ -1079,7 +1165,7 @@ const LandingPage = () => {
             </ContactForm>
           </ContactContainer>
         </Container>
-      </ContactSection>
+      </ContactSectionStyled>
     </LandingPageContainer>
   );
 };
